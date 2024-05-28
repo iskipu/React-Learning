@@ -9,6 +9,8 @@ import {
   Routes,
   useOutlet,
   useOutletContext,
+  useLocation,
+  Navigate,
 } from "react-router-dom";
 
 function App() {
@@ -24,6 +26,7 @@ function App() {
           <li>
             <NavLink
               to="nested/a"
+              replace
               className={({ isActive }) =>
                 ` ${
                   isActive ? "text-red-500" : "text-blue-400"
@@ -34,14 +37,16 @@ function App() {
             </NavLink>
           </li>
           <li>
-            <NavLink
+            <Link
               to="nested/b"
               className="text-blue-500 hover:text-blue-800"
+              state={{ from: "Link State", to: "NESTEDD BB" }}
             >
               NestedB
-            </NavLink>
+            </Link>
           </li>
         </ul>
+        <Link to={"/homeNavigator"}>HOME NAVIG</Link>
       </nav>
 
       <Routes>
@@ -51,6 +56,7 @@ function App() {
           <Route path="A" element={<NestedA />} />
           <Route path="B" element={<NestedB />} />
         </Route>
+        <Route path="/homeNavigator" element={<HomeNavigator />} />
         <Route path="*" element={<h1>NOT FOUNDD 404</h1>} />
       </Routes>
     </>
@@ -74,6 +80,18 @@ function Nested() {
 function NestedA() {
   return <>Nested A</>;
 }
+function HomeNavigator() {
+  return <Navigate to={"/user/JohnDOe"} />;
+}
 function NestedB() {
-  return <>Nested B</>;
+  const { state: data } = useLocation();
+  console.log(data);
+  return (
+    <>
+      Nested B
+      <p>
+        data from {data.from} to {data.to}
+      </p>
+    </>
+  );
 }
